@@ -1,0 +1,9 @@
+.card__image {
+  min-width: 282px;
+  height: 282px;
+  align-self: center;
+}
+
+.card__image:hover {
+  cursor: pointer;
+}

@@ -1,0 +1,11 @@
+.popup_open {
+  display: block;
+  visibility: visible;
+  transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  -webkit-transition: all .5s ease;
+  -o-transition: all .5s ease;
+  -ms-transition: all .5s ease;
+  opacity: 1;
+}
+

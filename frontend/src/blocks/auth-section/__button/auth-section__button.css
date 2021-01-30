@@ -1,0 +1,15 @@
+.auth-section__button {
+  margin-top: 216px;
+  height: 50px;
+  background-color: #ffffff;
+  font-size: 18px;
+  text-align: center;
+  font-weight: 500;
+  color: #000;
+  transition: .3s ease;
+}
+
+.auth-section__button:hover {
+  opacity: 0.8;
+  transition: opacity .3s ease;
+}

@@ -1,0 +1,15 @@
+.photo-grid {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, 282px);
+  grid-row-gap: 20px;
+  grid-column-gap: 18px;
+  margin: 36px auto 0;
+}
+
+@media screen and (min-width: 920px) {
+  .photo-grid {
+    margin-top: 48px;
+    grid-row-gap: 21px;
+  }
+}

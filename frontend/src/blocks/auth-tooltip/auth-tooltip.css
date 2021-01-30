@@ -1,0 +1,14 @@
+@import url('./__text/auth-tooltip__text.css');
+
+.auth-tooltip {
+  width: 394px;
+  height: 294px;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}

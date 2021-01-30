@@ -1,0 +1,14 @@
+.footer__copyright {
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  color: #545454;
+  margin: 0;
+  cursor: default;
+}
+
+@media screen and (min-width: 920px) {
+  .footer__copyright {
+    font-size: 18px;
+  }
+}

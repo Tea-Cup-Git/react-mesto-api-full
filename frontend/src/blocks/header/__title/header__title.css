@@ -1,0 +1,21 @@
+.header__title {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: right;
+  transition: opacity .3s ease;
+}
+
+.header__title:hover {
+  opacity: 0.8;
+  transition: opacity .3s ease;
+}
+
+@media screen and (max-width: 920px) {
+  .header__title {
+    margin-right: 28px;
+    font-size: 14px;
+  }
+}

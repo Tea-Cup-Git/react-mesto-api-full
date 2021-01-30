@@ -1,0 +1,9 @@
+.content {
+  margin: 40px 19px 0;
+}
+
+@media screen and (min-width: 920px) {
+  .content {
+    margin: 40px 0 0;
+  }
+}

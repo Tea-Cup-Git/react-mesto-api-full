@@ -1,0 +1,14 @@
+.card__name {
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 900;
+  font-size: 24px;
+  color: #000000;
+  margin: auto 21px;
+  max-width: 200px;
+  display: inline-block;
+  overflow: hidden;
+  white-space:nowrap;
+  text-overflow: ellipsis;
+  cursor: default;
+}

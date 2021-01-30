@@ -1,0 +1,10 @@
+.profile__button-wrapper {
+  display: flex;
+  max-width: 282px;
+}
+
+@media screen and (min-width: 920px) {
+  .profile__button-wrapper {
+    max-width: 450px;
+  }
+}

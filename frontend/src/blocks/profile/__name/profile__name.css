@@ -1,0 +1,19 @@
+.profile__name {
+  font-weight: 500;
+  font-size: 27px;
+  text-align: center;
+  color: #FFFFFF;
+  margin: 0;
+  display: block;
+  overflow: hidden;
+  white-space:nowrap;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+
+@media screen and (min-width: 920px) {
+  .profile__name {
+    font-size: 42px;
+    text-align: left;
+  }
+}
