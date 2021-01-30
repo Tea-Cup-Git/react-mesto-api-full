@@ -98,7 +98,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-13',
+  baseUrl: 'http://lebedeva.students.nomoredomains.work',
   token: '05e19680-152e-4468-99ab-dd133195a5d0'
 })
 
