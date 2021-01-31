@@ -142,6 +142,7 @@ function App() {
     // eslint-disable-next-line
   }, []);
 
+  // Регистрация
   function handleRegister(email, password) {
     auth.register(escape(email), escape(password))
       .then(() => {
@@ -153,6 +154,7 @@ function App() {
     onInfoTooltip();
   }
 
+  // Авторизация
   function handleLogin(email, password) {
     auth.authorize(escape(email), escape(password))
       .then((data) => {
@@ -172,6 +174,7 @@ function App() {
     onInfoTooltip();
   }
 
+  // Выйти из аккаунта
   function signOut() {
     setLoggedIn(false);
     setUserData('');

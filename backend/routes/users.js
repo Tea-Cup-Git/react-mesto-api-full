@@ -2,9 +2,7 @@
 const usersRouter = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 
-const {
-  getUsers, getUser, updateProfile, updateAvatar
-} = require('../controllers/users');
+const { getUsers, getUser, updateProfile, updateAvatar, signOut } = require('../controllers/users');
 
 usersRouter.get('/users', getUsers);
 
@@ -26,5 +24,7 @@ usersRouter.patch('/users/me/avatar', celebrate({
     avatar: Joi.string().required()
   })
 }), updateAvatar);
+
+usersRouter.get('/signout', signOut);
 
 module.exports = usersRouter;

@@ -1,5 +1,6 @@
-/* eslint-disable max-len */
-require('dotenv').config();
+/* eslint-disable object-curly-newline */
+/* eslint-disable no-unused-vars */
+/* eslint-disable linebreak-style */
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -7,26 +8,37 @@ const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 const { celebrate, Joi, CelebrateError } = require('celebrate');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+require('dotenv').config();
 const cardsRouter = require('./routes/cards.js');
 const usersRouter = require('./routes/users.js');
-const { login, createUser } = require('./controllers/users.js');
 const auth = require('./middlewares/auth.js');
+const { login, createUser } = require('./controllers/users.js');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100
 });
 
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'http://lebedeva.students.nomoredomains.work',
+    'https://lebedeva.students.nomoredomains.work',
+    'http://www.lebedeva.students.nomoredomains.work',
+    'https://www.lebedeva.students.nomoredomains.work'
+  ],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(limiter);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(auth);
 app.use(requestLogger);
 
 app.get('/crash-test', () => {
@@ -35,6 +47,19 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8).custom((pass) => {
+      const reg = /^\S*$/;
+      if (!reg.test(pass)) {
+        throw new CelebrateError('Пароль введен неверно');
+      }
+      return pass;
+    })
+  })
+}), createUser);
+
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -42,32 +67,18 @@ app.post('/signin', celebrate({
   })
 }), login);
 
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8).custom((pass) => {
-      const reg = /^\S*$/;
-      if (!reg.test(pass)) {
-        throw new CelebrateError('Неверно введенный пароль');
-      }
-      return pass;
-    })
-  })
-}), createUser);
+app.use(auth);
 
 app.use('/', usersRouter);
 app.use('/', cardsRouter);
 
-// eslint-disable-next-line no-unused-vars
 app.all('/*', (req, res, next) => {
   throw new NotFoundError({ message: 'Запрашиваемый ресурс не найден' });
 });
 
 app.use(errorLogger);
-
 app.use(errors());
 
-// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
