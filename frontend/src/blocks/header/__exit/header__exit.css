@@ -13,3 +13,9 @@
   transition: opacity .3s ease;
   cursor: pointer;
 }
+
+@media screen and (max-width: 920px) {
+  .header__exit {
+    font-size: 14px;
+  }
+}

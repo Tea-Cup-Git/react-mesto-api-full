@@ -24,17 +24,7 @@ const limiter = rateLimit({
   max: 100
 });
 
-// const corsOptions = {
-//   origin: [
-//     'http://lebedeva.students.nomoredomains.work',
-//     'https://lebedeva.students.nomoredomains.work',
-//     'http://www.lebedeva.students.nomoredomains.work',
-//     'https://www.lebedeva.students.nomoredomains.work'
-//   ],
-//   credentials: true
-// };
-
-app.use(cors());
+app.use('/', cors());
 app.use(cookieParser());
 app.use(limiter);
 app.use(bodyParser.json());

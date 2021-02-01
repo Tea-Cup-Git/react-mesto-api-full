@@ -35,10 +35,19 @@ module.exports.getUser = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    email, password
+  } = req.body;
   bcrypt.hash(password.toString(), 10)
+  // eslint-disable-next-line arrow-body-style
     .then((hash) => {
-      return User.create({ name, about, avatar, email, password: hash });
+      return User.create({
+        name: 'Жак-Ив Кусто',
+        about: 'Исследователь',
+        avatar: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+        email,
+        password: hash
+      });
     })
     .catch((err) => {
       if (err._message === 'user validation failed') {
@@ -61,12 +70,13 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
+  console.log(req.body);
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким ID');
       }
-      res.send(user);
+      return res.send(user);
     })
     .catch(next);
 };
@@ -91,12 +101,13 @@ module.exports.login = (req, res, next) => {
         throw new UnauthorizedError('Ошибка авторизации');
       }
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
-      res.cookie('jwt', token, {
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-        sameSite: true
-      })
-        .send({ message: 'Успешная авторизация' });
+      // res.cookie('jwt', token, {
+      //   maxAge: 3600000 * 24 * 7,
+      //   httpOnly: true,
+      //   sameSite: 'Lax'
+      // })
+      //   .send({ message: 'Авторизация прошла успешно!' });
+      res.send({ token });
     })
     .catch(next);
 };

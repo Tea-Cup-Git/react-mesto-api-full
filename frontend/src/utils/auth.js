@@ -1,9 +1,14 @@
-export const BASE_URL = 'http://api.lebedeva.students.nomoredomains.work';
+import { setToken } from './token';
+
+// export const BASE_URL = 'http://api.lebedeva.students.nomoredomains.work';
+
+export const BASE_URL = 'http://localhost:3000';
 
 export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
     headers: {
+      'Accept': 'application/json',
       'Content-type': 'application/json'
     },
     body: JSON.stringify({ email, password })
@@ -18,6 +23,7 @@ export const authorize = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
     headers: {
+      'Accept': 'application/json',
       'Content-type': 'application/json'
     },
     body: JSON.stringify({ email, password })
@@ -28,7 +34,7 @@ export const authorize = (email, password) => {
     })
     .then((data) => {
       if (data.token) {
-        localStorage.setItem('token', data.token);
+        setToken(data.token);
         return data;
       }
     });
@@ -43,9 +49,11 @@ export const getContent = (token) => {
       'Authorization': `Bearer ${token}`
     }
   })
-    .then((res) => {
-      if (res.ok) return res.json();
-      else return Promise.reject(res.status);
-    })
-    .then((data) => data);
+  .then((res => {
+    let data = res.json();
+    if (!res.ok) {
+      return Promise.reject(res.status);
+    }
+    return data;
+  }))
 };

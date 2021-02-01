@@ -14,6 +14,7 @@ import ProtectedRoute from './ProtectedRoute';
 import * as auth from '../utils/auth';
 import SuccessIcon from '../images/success-icon.svg';
 import FailIcon from '../images/fail-icon.svg';
+import { getToken, removeToken, setToken } from "../utils/token";
 
 function App() {
   const history = useHistory();
@@ -22,7 +23,7 @@ function App() {
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({ isOpen: false });
-  const [currentUser, setCurrentUser] = React.useState('');
+  const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [loggedIn, setLoggedIn] = React.useState(false);
@@ -30,14 +31,20 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
   const [InfoTooltipContents, setInfoTooltipContents] = React.useState({});
 
+  const getUserAndCards = async () => {
+    try {
+      const [dataUser, dataCards] = await Promise.all([api.getUserInfo(), api.getInitialCards()]);
+      setCards(dataCards);
+      setCurrentUser(dataUser);
+    } catch (err) {
+      console.log(`Ошибка при загрузке данных: ${err}`);
+    }
+  };
+
   React.useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([dataUser, dataCards]) => {
-        setCurrentUser(dataUser);
-        setCards(dataCards);
-      })
-      .catch((err) => console.error(`Ошибка при загрузке данных: ${err}`));
-  }, [])
+    if (!loggedIn) return;
+    getUserAndCards();
+  }, [loggedIn]);
 
   function handleEditProfileClick() {
     setEditProfilePopupOpen(true);
@@ -89,9 +96,12 @@ function App() {
 
   // Обновить данные пользователя
   function handleUpdateUser(name, description) {
+    console.log(name)
+    console.log(description)
     setIsLoading(true);
     api.setUserInfo({ name: name, about: description })
-      .then(dataUser => {
+      .then((dataUser) => {
+        console.log(dataUser)
         setCurrentUser(dataUser);
         closeAllPopups();
       })
@@ -119,22 +129,26 @@ function App() {
     setIsLoading(false);
   }
 
+  function handleContentGetter(token) {
+    return auth.getContent(token)
+      .then((res) => {
+        setUserData(res.email);
+        setLoggedIn(true);
+        history.push('/');
+      })
+  }
+
   function tokenCheck() {
-    let token = localStorage.getItem('token');
-    if (token) {
-      auth.getContent(token)
-        .then((res) => {
-          if (res) {
-            setLoggedIn(true);
-            setUserData(res.data.email);
-            history.push('/');
-          } else {
-            setInfoTooltipContents({ message: 'Что-то пошло не так! Попробуйте ещё раз.', icon: FailIcon });
-            onInfoTooltip();
-          }
-        })
-        .catch(err => console.log(err));
+    const token = getToken();
+    if (!token) {
+      return;
     }
+    handleContentGetter(token)
+      .catch((err) => {
+        if (err === 401) {
+          console.log('Ошибка передачи токена')
+        }
+      });
   }
 
   React.useEffect(() => {
@@ -144,7 +158,7 @@ function App() {
 
   // Регистрация
   function handleRegister(email, password) {
-    auth.register(escape(email), escape(password))
+    auth.register(email, password)
       .then(() => {
         setInfoTooltipContents({ message: 'Вы успешно зарегистрировались!', icon: SuccessIcon });
         history.push('/sign-in');
@@ -156,29 +170,30 @@ function App() {
 
   // Авторизация
   function handleLogin(email, password) {
-    auth.authorize(escape(email), escape(password))
-      .then((data) => {
-
-        auth.getContent(data.token)
-          .then((res) => {
-            setUserData(res.data.email);
-          })
-          .catch((err) => setInfoTooltipContents({ message: `Что-то пошло не так! Попробуйте ещё раз. (${err})`, icon: FailIcon }));
-
-        setInfoTooltipContents({ message: 'Вы успешно вошли!', icon: SuccessIcon });
-        setLoggedIn(true);
-        history.push('/');
-      })
-      .catch((err) => setInfoTooltipContents({ message: `Что-то пошло не так! Попробуйте ещё раз. (${err})`, icon: FailIcon }));
-
-    onInfoTooltip();
+    auth.authorize(email, password)
+    .then((data) => {
+      if (!data) {
+        return;
+      }
+      if (data.token) {
+        setToken(data.token);
+        handleContentGetter(data.token)
+      }
+    })
+    .catch((err) => {
+      if (err === 400) {
+        console.log('Не передано одно из полей');
+      } else if (err === 401) {
+        console.log('Пользователь с данным email не найден');
+      }
+    });
   }
 
   // Выйти из аккаунта
   function signOut() {
     setLoggedIn(false);
     setUserData('');
-    localStorage.removeItem('token');
+    removeToken();
     history.push('/sign-in');
   }
 

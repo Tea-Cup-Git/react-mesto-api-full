@@ -1,7 +1,9 @@
+import { getToken } from './token';
+
 class Api {
-  constructor({ baseUrl, token}) {
+  constructor({ baseUrl, headers}) {
     this._baseUrl = baseUrl;
-    this._token = token;
+    this._headers = headers;
   }
 
   _handleResponse(res) {
@@ -12,11 +14,18 @@ class Api {
     }
   }
 
+  _getHeaders() {
+    const token = getToken();
+
+    return {
+      ...this.headers,
+      'Authorization': `Bearer ${token}`
+    }
+  }
+
   getInitialCards() {
     return fetch(`${this._baseUrl}/cards`, {
-      headers: {
-        authorization: this._token
-      }
+      headers: this._getHeaders(),
     })
       .then(this._handleResponse)
   }
@@ -24,10 +33,7 @@ class Api {
   addCard({ name, link, alt }) {
     return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
-      headers: {
-        authorization: this._token,
-        'Content-Type': 'application/json'
-      },
+      headers: this._getHeaders(),
       body: JSON.stringify({
         name,
         link,
@@ -40,29 +46,23 @@ class Api {
   removeCard(cardID) {
     return fetch(`${this._baseUrl}/cards/${cardID}`, {
       method: 'DELETE',
-      headers: {
-        authorization: this._token,
-      }
+      headers: this._getHeaders(),
     })
       .then(this._handleResponse)
   }
 
   getUserInfo() {
     return fetch(`${this._baseUrl}/users/me`, {
-      headers: {
-        authorization: this._token
-      }
+      headers: this._getHeaders(),
     })
       .then(this._handleResponse)
   }
 
   setUserInfo({ name, about }) {
+    console.log({ name, about })
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
-      headers: {
-        authorization: this._token,
-        'Content-Type': 'application/json'
-      },
+      headers: this._getHeaders(),
       body: JSON.stringify({
         name,
         about
@@ -74,10 +74,7 @@ class Api {
   setUserAvatar({ avatar }) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
-      headers: {
-        authorization: this._token,
-        'Content-Type': 'application/json'
-      },
+      headers: this._getHeaders(),
       body: JSON.stringify({
         avatar
       })
@@ -88,18 +85,17 @@ class Api {
   changeLikeCardStatus(cardID, like) {
     return fetch(`${this._baseUrl}/cards/likes/${cardID}`, {
       method: like ? 'PUT' : 'DELETE',
-      headers: {
-        authorization: this._token,
-        'Content-Type': 'application/json'
-      }
+      headers: this._getHeaders(),
     })
       .then(this._handleResponse)
   }
 }
 
 const api = new Api({
-  baseUrl: 'http://api.lebedeva.students.nomoredomains.work',
-  token: '05e19680-152e-4468-99ab-dd133195a5d0'
+  baseUrl: 'http://localhost:3000',
+  headers: {
+    'Content-Type': 'application/json',
+  }
 })
 
 export default api;
