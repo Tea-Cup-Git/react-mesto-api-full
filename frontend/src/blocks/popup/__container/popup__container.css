@@ -1,5 +1,5 @@
 .popup__container {
-  min-width: 430px;
+  width: 430px;
   background: #FFFFFF;
   border-radius: 10px;
   display: flex;

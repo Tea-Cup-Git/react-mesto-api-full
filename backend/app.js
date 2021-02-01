@@ -59,8 +59,8 @@ app.post('/signin', celebrate({
 
 app.use(auth);
 
-app.use('/', usersRouter);
-app.use('/', cardsRouter);
+app.use('/', auth, usersRouter);
+app.use('/', auth, cardsRouter);
 
 app.all('/*', (req, res, next) => {
   throw new NotFoundError({ message: 'Запрашиваемый ресурс не найден' });

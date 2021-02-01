@@ -35,9 +35,7 @@ module.exports.getUser = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  const {
-    email, password
-  } = req.body;
+  const { email, password } = req.body;
   bcrypt.hash(password.toString(), 10)
   // eslint-disable-next-line arrow-body-style
     .then((hash) => {
@@ -51,7 +49,7 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err._message === 'user validation failed') {
-        throw new ConflictError('Такой пользователь уже существует или неправильно введен пароль');
+        throw new ConflictError('Такой пользователь уже существует');
       } else next(err);
     })
     .then((newUser) => {
@@ -76,7 +74,7 @@ module.exports.updateProfile = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким ID');
       }
-      return res.send(user);
+      res.send(user);
     })
     .catch(next);
 };

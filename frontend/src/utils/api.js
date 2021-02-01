@@ -18,7 +18,7 @@ class Api {
     const token = getToken();
 
     return {
-      ...this.headers,
+      ...this._headers,
       'Authorization': `Bearer ${token}`
     }
   }
@@ -59,7 +59,6 @@ class Api {
   }
 
   setUserInfo({ name, about }) {
-    console.log({ name, about })
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
       headers: this._getHeaders(),
@@ -82,6 +81,14 @@ class Api {
       .then(this._handleResponse)
   }
 
+  changeLikeCardStatus(cardID, isLiked) {
+    return fetch(`${this._baseUrl}/cards/likes/${cardID}`, {
+      method: isLiked ? 'PUT' : 'DELETE',
+      headers: this._getHeaders(),
+    })
+      .then(this._handleResponse)
+  }
+
   changeLikeCardStatus(cardID, like) {
     return fetch(`${this._baseUrl}/cards/likes/${cardID}`, {
       method: like ? 'PUT' : 'DELETE',
@@ -92,9 +99,10 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: 'http://localhost:3000',
+  baseUrl: 'api.lebedeva.students.nomoredomains.work',
   headers: {
-    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Content-type': 'application/json'
   }
 })
 
