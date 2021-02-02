@@ -1,8 +1,8 @@
 import { setToken } from './token';
 
-export const BASE_URL = 'http://api.lebedeva.students.nomoredomains.work';
+// export const BASE_URL = 'http://api.lebedeva.students.nomoredomains.work';
 
-// export const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'http://localhost:3000';
 
 export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
