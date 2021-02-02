@@ -1,6 +1,6 @@
 import { setToken } from './token';
 
-export const BASE_URL = 'http://api.lebedeva.students.nomoredomains.work';
+export const BASE_URL = 'https://api.lebedeva.students.nomoredomains.work';
 
 // export const BASE_URL = 'http://localhost:3000';
 
