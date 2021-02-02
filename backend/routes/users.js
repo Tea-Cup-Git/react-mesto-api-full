@@ -6,7 +6,7 @@ const { getUsers, getUser, updateProfile, updateAvatar, signOut } = require('../
 
 usersRouter.get('/users', getUsers);
 
-usersRouter.get('/users/me', celebrate({
+usersRouter.get('/users/:_id', celebrate({
   params: Joi.object().keys({
     _id: Joi.string().alphanum().length(24).hex()
   })
@@ -21,7 +21,7 @@ usersRouter.patch('/users/me', celebrate({
 
 usersRouter.patch('/users/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required()
+    avatar: Joi.string().required().regex(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?\#?$/)
   })
 }), updateAvatar);
 

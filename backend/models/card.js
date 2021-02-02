@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const reg = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?\#?$/;
-
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -11,21 +9,16 @@ const cardSchema = new mongoose.Schema({
   },
   link: {
     type: String,
-    required: true,
-    validate: {
-      validator(v) {
-        return reg.test(v);
-      },
-      message: (props) => `${props.value} ссылка невалидна!`
-    }
+    required: true
   },
   owner: {
     type: mongoose.Types.ObjectId,
+    ref: 'user',
     required: true
   },
   likes: [{
     type: mongoose.Types.ObjectId,
-    default: []
+    ref: 'user'
   }],
   createAt: {
     type: Date,

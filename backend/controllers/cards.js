@@ -6,9 +6,6 @@ const ForbiddenError = require('../errors/ForbiddenError');
 module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => {
-      if (!cards) {
-        throw new NotFoundError('Данные не найдены');
-      }
       res.send(cards);
     })
     .catch(next);
@@ -30,7 +27,7 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params._id)
+  Card.findById(req.params._id)
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Вы не можете удалить чужую карточку');
@@ -38,7 +35,8 @@ module.exports.deleteCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Данные не найдены');
       }
-      res.send(card);
+      Card.findByIdAndRemove(req.params._id)
+        .then((deletedCard) => res.send(deletedCard));
     })
     .catch(next);
 };

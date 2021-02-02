@@ -24,7 +24,7 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUser = (req, res, next) => {
-  User.findById(req.user._id)
+  User.findById(req.params._id)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким ID');
@@ -35,14 +35,16 @@ module.exports.getUser = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { email, password } = req.body;
+  const {
+    name, about, avatar, email, password
+  } = req.body;
   bcrypt.hash(password.toString(), 10)
   // eslint-disable-next-line arrow-body-style
     .then((hash) => {
       return User.create({
-        name: 'Жак-Ив Кусто',
-        about: 'Исследователь',
-        avatar: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+        name,
+        about,
+        avatar,
         email,
         password: hash
       });

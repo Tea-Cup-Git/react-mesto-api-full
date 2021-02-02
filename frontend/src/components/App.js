@@ -161,7 +161,7 @@ function App() {
     auth.register(email, password)
       .then(() => {
         setInfoTooltipContents({ message: 'Вы успешно зарегистрировались!', icon: SuccessIcon });
-        history.push('/signin');
+        history.push('/sign-in');
       })
       .catch((err) => setInfoTooltipContents({ message: `Что-то пошло не так! Попробуйте ещё раз. (${err})`, icon: FailIcon }));
 
@@ -194,7 +194,7 @@ function App() {
     setLoggedIn(false);
     setUserData('');
     removeToken();
-    history.push('/signin');
+    history.push('/sign-in');
   }
 
   function onInfoTooltip() {
@@ -218,14 +218,14 @@ function App() {
               userData={userData}
               signOut={signOut}
             />
-            <Route path='/signup'>
+            <Route path='/sign-up'>
               <Register handleRegister={handleRegister} />
             </Route>
-            <Route path='/signin'>
+            <Route path='/sign-in'>
               <Login handleLogin={handleLogin} />
             </Route>
             <Route>
-              {<Redirect to={`${loggedIn ? '/' : '/signin'}`} />}
+              {<Redirect to={`${loggedIn ? '/' : '/sign-in'}`} />}
             </Route>
           </Switch>
           <EditProfilePopup
