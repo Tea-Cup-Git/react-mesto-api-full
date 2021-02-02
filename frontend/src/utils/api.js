@@ -91,7 +91,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: 'http://localhost:3000',
+  baseUrl: 'https://api.lebedeva.students.nomoredomains.work',
   headers: {
     'Accept': 'application/json',
     'Content-type': 'application/json'
