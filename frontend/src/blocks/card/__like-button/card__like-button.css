@@ -6,6 +6,7 @@
   outline: none;
   cursor: pointer;
   margin: auto;
+  transition: .3s ease;
 }
 
 .card__like-button:hover {
