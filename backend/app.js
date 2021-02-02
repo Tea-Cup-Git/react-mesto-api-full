@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
-const { celebrate, Joi, CelebrateError } = require('celebrate');
+const { celebrate, Joi } = require('celebrate');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
