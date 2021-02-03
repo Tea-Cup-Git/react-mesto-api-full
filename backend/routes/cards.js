@@ -10,7 +10,7 @@ cardsRouter.post('/cards', celebrate({
   body: Joi.object().keys({
     name: Joi.string().trim().required().min(2)
       .max(30),
-    link: Joi.string().trim().uri().required(),
+    link: Joi.string().trim().required().regex(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?\#?$/),
     alt: Joi.string()
   })
 }), createCard);
